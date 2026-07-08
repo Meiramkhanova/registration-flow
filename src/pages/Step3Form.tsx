@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "../app/AuthLayout";
 import { useRegistrationStore } from "../store/registrationStore";
 
 interface FormValues {
@@ -58,8 +58,8 @@ export default function Step3Form() {
   };
 
   return (
-    <AuthLayout title="Регистрация" topLabel="Регистрация 2">
-      <p className="text-sm text-[--color-text-muted] mb-6">
+    <AuthLayout title="Регистрация">
+      <p className="text-gray-800 mb-6">
         Заполните анкету для завершения регистрации
       </p>
 

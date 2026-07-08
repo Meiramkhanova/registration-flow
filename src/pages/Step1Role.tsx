@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "../app/AuthLayout";
 import type { UserRole } from "../types/registration";
 import { useRegistrationStore } from "../store/registrationStore";
+import { Button } from "@/shared/ui/button";
+import Card from "@/shared/components/Card";
 
 const roles: { id: UserRole; title: string; desc: string }[] = [
   {
@@ -30,46 +32,26 @@ export default function Step1Role() {
 
   return (
     <AuthLayout title="Регистрация">
-      <p className="text-sm text-[--color-text-muted] mb-6">
+      <p className="text-gray-800 md:max-w-[80%] pb-6">
         Выберите, как вы хотите использовать приложение
       </p>
 
-      <div className="space-y-3 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         {roles.map((role) => (
-          <button
+          <Card
             key={role.id}
-            type="button"
-            onClick={() => setSelected(role.id)}
-            className={`w-full text-left p-4 rounded-xl border-2 transition-colors flex items-start gap-3
-              ${
-                selected === role.id
-                  ? "border-brand bg-cyan-50"
-                  : "border-[--color-border-default] bg-white hover:border-gray-300"
-              }`}>
-            <div className="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center shrink-0">
-              <RoleIcon roleId={role.id} />
-            </div>
-            <div>
-              <div className="font-semibold text-[--color-text-primary]">
-                {role.title}
-              </div>
-              <div className="text-sm text-[--color-text-muted] mt-1">
-                {role.desc}
-              </div>
-            </div>
-          </button>
+            title={role.title}
+            description={role.desc}
+            roleId={role.id}
+            selected={selected === role.id}
+            onSelect={setSelected}
+          />
         ))}
       </div>
 
-      <button
-        type="button"
-        onClick={handleContinue}
-        disabled={!selected}
-        className="w-full py-3 rounded-lg text-white font-medium transition-colors
-          disabled:bg-[--color-brand-light] disabled:cursor-not-allowed
-          bg-brand hover:bg-[--color-brand-dark]">
+      <Button type="button" onClick={handleContinue} disabled={!selected}>
         ПРОДОЛЖИТЬ
-      </button>
+      </Button>
     </AuthLayout>
   );
 }

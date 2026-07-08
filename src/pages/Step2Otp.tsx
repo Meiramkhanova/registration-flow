@@ -6,7 +6,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "../components/AuthLayout";
+import AuthLayout from "../app/AuthLayout";
 import { useRegistrationStore } from "../store/registrationStore";
 
 const CODE_LENGTH = 6;
@@ -81,8 +81,8 @@ export default function Step2Otp() {
   }, [isComplete]);
 
   return (
-    <AuthLayout title="Введите код из SMS" topLabel="Регистрация 2">
-      <p className="text-sm text-[--color-text-muted] mb-6">
+    <AuthLayout title="Введите код из SMS">
+      <p className="text-gray-800 mb-6">
         Проверочный код был отправлен на номер {phone || "+7 (___) ___-__-__"}
       </p>
 
@@ -103,21 +103,19 @@ export default function Step2Otp() {
         ))}
       </div>
 
-      {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
+      {error && <p className=" text-red-500 mb-4">{error}</p>}
 
       <button
         type="button"
         onClick={handleResend}
         disabled={timer > 0}
-        className="text-sm text-brand disabled:text-[--color-text-muted] mb-6">
+        className="cursor-pointer text-brand disabled:text-[--color-text-muted] mb-6">
         {timer > 0
           ? `Отправить повторно через ${String(Math.floor(timer / 60)).padStart(2, "0")}:${String(timer % 60).padStart(2, "0")}`
           : "Отправить код повторно"}
       </button>
 
-      {loading && (
-        <p className="text-sm text-[--color-text-muted]">Проверка кода...</p>
-      )}
+      {loading && <p className="text-gray-800">Проверка кода...</p>}
     </AuthLayout>
   );
 }

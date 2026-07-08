@@ -16,7 +16,11 @@ export default function AuthLayout({
   className,
 }: AuthLayoutProps) {
   return (
-    <div className={cn("h-screen flex flex-col", className)}>
+    <div
+      className={cn(
+        "h-screen md:max-h-screen md:overflow-hidden flex flex-col",
+        className,
+      )}>
       <div className="grid grid-cols-1 sm:grid-cols-7 h-full">
         <div
           className={cn(
@@ -42,7 +46,7 @@ export default function AuthLayout({
         <div
           className={cn(
             "right-info relative col-span-4 py-6 md:py-24 px-12 md:px-24",
-            "flex flex-col justify-between h-full",
+            "flex flex-col justify-between h-full gap-4",
           )}>
           <div className="top-info flex flex-col gap-4">
             <h2 className="text-2xl md:text-4xl font-bold leading-tight">

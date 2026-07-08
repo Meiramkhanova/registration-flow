@@ -4,11 +4,12 @@ import { useForm } from "react-hook-form";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import "react-phone-number-input/style.css";
 import { useRegistrationStore } from "@/store/registrationStore";
-import AuthLayout from "@/components/AuthLayout";
-import { Field, FieldGroup, FieldLabel, Checkbox } from "@/shared/ui/checkbox";
+import AuthLayout from "@/app/AuthLayout";
+import { Checkbox } from "@/shared/ui/checkbox";
 import { Button } from "@/shared/ui/button";
 import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
+import { Field, FieldGroup, FieldLabel } from "@/shared/ui/field";
 
 interface FormValues {
   phone: string;
@@ -69,41 +70,24 @@ export default function Step0Phone() {
           )}
         </div>
 
-        <div className="flex items-start gap-2">
-          <Checkbox
-            id="agree"
-            checked={agreeValue}
-            onCheckedChange={(checked) =>
-              setValue("agree", checked === true, { shouldValidate: true })
-            }
-            className="mt-0.5"
-          />
+        <FieldGroup>
+          <Field orientation="horizontal">
+            <Checkbox
+              id="terms-checkbox-basic"
+              name="terms-checkbox-basic"
+              checked={agreeValue}
+              onCheckedChange={(checked) =>
+                setValue("agree", checked === true, { shouldValidate: true })
+              }
+            />
 
-          <FieldGroup className="mx-auto w-56">
-            <Field orientation="horizontal">
-              <Checkbox id="terms-checkbox-basic" name="terms-checkbox-basic" />
-              <FieldLabel htmlFor="terms-checkbox-basic">
-                Accept terms and conditions
-              </FieldLabel>
-            </Field>
-          </FieldGroup>
+            <FieldLabel htmlFor="terms-checkbox-basic">
+              Согласен с политикой конфиденциальности{" "}
+            </FieldLabel>
+          </Field>
+        </FieldGroup>
 
-          <label
-            htmlFor="agree"
-            className="text-sm text-[--color-text-muted] cursor-pointer">
-            Согласен с{" "}
-            <a href="#" className="text-brand underline">
-              политикой конфиденциальности
-            </a>
-          </label>
-        </div>
-
-        <Button
-          type="submit"
-          disabled={!isValid || !isPhoneValid || loading}
-          className="w-full py-6 rounded-full text-white font-medium
-            disabled:bg-[--color-brand-light] disabled:cursor-not-allowed
-            bg-brand hover:bg-[--color-brand-dark]">
+        <Button type="submit" disabled={!isValid || !isPhoneValid || loading}>
           {loading ? "Отправка..." : "ВОЙТИ"}
         </Button>
       </form>
