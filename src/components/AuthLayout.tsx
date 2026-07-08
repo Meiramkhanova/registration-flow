@@ -1,17 +1,22 @@
+import CarIcon from "@/shared/icons/CarIcon";
+import CoverIcon from "@/shared/icons/CoverIcon";
+import MapIcon from "@/shared/icons/MapIcon";
+import { cn } from "@/shared/utils/cn";
 import type { ReactNode } from "react";
-import CoverIcon from "../shared/icons/CoverIcon";
-import CarIcon from "../shared/icons/CarIcon";
-import { cn } from "../shared/utils/cn";
-import MapIcon from "../shared/icons/MapIcon";
 
 interface AuthLayoutProps {
   title: string;
   children: ReactNode;
+  className?: string;
 }
 
-export default function AuthLayout({ title, children }: AuthLayoutProps) {
+export default function AuthLayout({
+  title,
+  children,
+  className,
+}: AuthLayoutProps) {
   return (
-    <div className="h-screen flex flex-col">
+    <div className={cn("h-screen flex flex-col", className)}>
       <div className="grid grid-cols-1 sm:grid-cols-7 h-full">
         <div
           className={cn(
@@ -21,7 +26,7 @@ export default function AuthLayout({ title, children }: AuthLayoutProps) {
           <div className="icon-title flex flex-col gap-4">
             <CoverIcon className="size-12" />
 
-            <h1 className="title text-3xl md:text-5xl font-bold leading-tight">
+            <h1 className="title text-3xl md:text-5xl font-bold leading-tight tracking-wider">
               Добро пожаловать
               <br />в личный кабинет
               <br />

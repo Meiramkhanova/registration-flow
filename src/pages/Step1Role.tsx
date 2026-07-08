@@ -29,7 +29,7 @@ export default function Step1Role() {
   };
 
   return (
-    <AuthLayout title="Регистрация" topLabel="Регистрация 1">
+    <AuthLayout title="Регистрация">
       <p className="text-sm text-[--color-text-muted] mb-6">
         Выберите, как вы хотите использовать приложение
       </p>

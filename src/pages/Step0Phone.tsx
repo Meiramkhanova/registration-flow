@@ -1,22 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
-import AuthLayout from "../components/AuthLayout";
-import { useRegistrationStore } from "../store/registrationStore";
+import { useForm } from "react-hook-form";
+import { isValidPhoneNumber } from "libphonenumber-js";
+import "react-phone-number-input/style.css";
+import { useRegistrationStore } from "@/store/registrationStore";
+import AuthLayout from "@/components/AuthLayout";
+import { Field, FieldGroup, FieldLabel, Checkbox } from "@/shared/ui/checkbox";
+import { Button } from "@/shared/ui/button";
+import "react-international-phone/style.css";
+import { PhoneInput } from "react-international-phone";
 
 interface FormValues {
   phone: string;
   agree: boolean;
-}
-
-function formatPhone(digits: string): string {
-  const d = digits.slice(0, 10);
-  let result = "";
-  if (d.length > 0) result += `(${d.slice(0, 3)}`;
-  if (d.length >= 4) result += `) ${d.slice(3, 6)}`;
-  if (d.length >= 7) result += `-${d.slice(6, 8)}`;
-  if (d.length >= 9) result += `-${d.slice(8, 10)}`;
-  return result;
 }
 
 export default function Step0Phone() {
@@ -25,9 +21,9 @@ export default function Step0Phone() {
   const setPhone = useRegistrationStore((s) => s.setPhone);
 
   const {
-    control,
     handleSubmit,
     watch,
+    setValue,
     formState: { isValid },
   } = useForm<FormValues>({
     mode: "onChange",
@@ -35,12 +31,13 @@ export default function Step0Phone() {
   });
 
   const phoneValue = watch("phone");
-  const rawDigits = (phoneValue || "").replace(/\D/g, "");
-  const isPhoneValid = rawDigits.length === 10;
+  const agreeValue = watch("agree");
+
+  const isPhoneValid = phoneValue ? isValidPhoneNumber(phoneValue) : false;
 
   const onSubmit = () => {
     setLoading(true);
-    setPhone(`+7${rawDigits}`);
+    setPhone(phoneValue);
 
     setTimeout(() => {
       setLoading(false);
@@ -50,64 +47,65 @@ export default function Step0Phone() {
 
   return (
     <AuthLayout title="Регистрация">
-      <p className="text-gray-800 md:max-w-[80%]">
+      <p className="text-gray-800 md:max-w-[80%] pb-6">
         Для входа в личный кабинет введите свой номер телефона, на него будет
         отправлено SMS с проверочным кодом
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex border border-[--color-border-default] rounded-lg overflow-hidden">
-          <div className="flex items-center gap-1 px-3 bg-gray-50 border-r border-[--color-border-default] text-sm text-[--color-text-primary]">
-            🇰🇿 +7
-          </div>
-          <Controller
-            name="phone"
-            control={control}
-            rules={{
-              validate: (v) => (v || "").replace(/\D/g, "").length === 10,
-            }}
-            render={({ field }) => (
-              <input
-                type="tel"
-                placeholder="(000) 000-00-00"
-                className="flex-1 px-3 py-2.5 outline-none text-sm"
-                value={formatPhone(field.value.replace(/\D/g, ""))}
-                onChange={(e) => field.onChange(e.target.value)}
-              />
-            )}
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+        <div className="phone-input-wrapper">
+          <PhoneInput
+            defaultCountry="kz"
+            value={phoneValue}
+            onChange={(phone) =>
+              setValue("phone", phone, { shouldValidate: true })
+            }
+            className="phone-input-wrapper"
           />
+          {phoneValue && !isPhoneValid && (
+            <p className="text-sm text-red-500 mt-1.5 font-medium">
+              Введите корректный номер телефона
+            </p>
+          )}
         </div>
 
         <div className="flex items-start gap-2">
-          <Controller
-            name="agree"
-            control={control}
-            rules={{ required: true }}
-            render={({ field }) => (
-              <input
-                type="checkbox"
-                checked={field.value}
-                onChange={(e) => field.onChange(e.target.checked)}
-                className="mt-1"
-              />
-            )}
+          <Checkbox
+            id="agree"
+            checked={agreeValue}
+            onCheckedChange={(checked) =>
+              setValue("agree", checked === true, { shouldValidate: true })
+            }
+            className="mt-0.5"
           />
-          <span className="text-sm text-[--color-text-muted]">
+
+          <FieldGroup className="mx-auto w-56">
+            <Field orientation="horizontal">
+              <Checkbox id="terms-checkbox-basic" name="terms-checkbox-basic" />
+              <FieldLabel htmlFor="terms-checkbox-basic">
+                Accept terms and conditions
+              </FieldLabel>
+            </Field>
+          </FieldGroup>
+
+          <label
+            htmlFor="agree"
+            className="text-sm text-[--color-text-muted] cursor-pointer">
             Согласен с{" "}
             <a href="#" className="text-brand underline">
               политикой конфиденциальности
             </a>
-          </span>
+          </label>
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={!isValid || !isPhoneValid || loading}
-          className="w-full py-3 rounded-lg text-white font-medium transition-colors
+          className="w-full py-6 rounded-full text-white font-medium
             disabled:bg-[--color-brand-light] disabled:cursor-not-allowed
             bg-brand hover:bg-[--color-brand-dark]">
           {loading ? "Отправка..." : "ВОЙТИ"}
-        </button>
+        </Button>
       </form>
     </AuthLayout>
   );
