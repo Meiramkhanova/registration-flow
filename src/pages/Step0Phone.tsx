@@ -20,9 +20,9 @@ function formatPhone(digits: string): string {
 }
 
 export default function Step0Phone() {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const setPhone = useRegistrationStore((s) => s.setPhone);
-  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -41,6 +41,7 @@ export default function Step0Phone() {
   const onSubmit = () => {
     setLoading(true);
     setPhone(`+7${rawDigits}`);
+
     setTimeout(() => {
       setLoading(false);
       navigate("/role");
@@ -49,7 +50,7 @@ export default function Step0Phone() {
 
   return (
     <AuthLayout title="Регистрация">
-      <p className="text-sm text-[--color-text-muted] mb-6">
+      <p className="text-gray-800 md:max-w-[80%]">
         Для входа в личный кабинет введите свой номер телефона, на него будет
         отправлено SMS с проверочным кодом
       </p>

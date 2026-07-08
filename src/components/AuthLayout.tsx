@@ -1,31 +1,27 @@
 import type { ReactNode } from "react";
+import CoverIcon from "../shared/icons/CoverIcon";
+import CarIcon from "../shared/icons/CarIcon";
+import { cn } from "../shared/utils/cn";
+import MapIcon from "../shared/icons/MapIcon";
 
 interface AuthLayoutProps {
   title: string;
   children: ReactNode;
-  topLabel?: string;
 }
 
-export default function AuthLayout({
-  title,
-  children,
-  topLabel = "Регистрация",
-}: AuthLayoutProps) {
+export default function AuthLayout({ title, children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="bg-[--color-topbar] text-white text-sm px-4 py-2">
-        {topLabel}
-      </div>
+    <div className="h-screen flex flex-col">
+      <div className="grid grid-cols-1 sm:grid-cols-7 h-full">
+        <div
+          className={cn(
+            "left-info col-span-3 relative bg-brand text-white",
+            "flex flex-col justify-between py-12 md:py-24 px-8 md:px-16 h-full",
+          )}>
+          <div className="icon-title flex flex-col gap-4">
+            <CoverIcon className="size-12" />
 
-      <div className="flex flex-col md:flex-row flex-1">
-        <div className="relative bg-brand text-white flex flex-col justify-between p-8 md:p-12 md:w-1/2 min-h-70 md:min-h-0">
-          <div>
-            <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
-              <rect y="0" width="32" height="4" fill="white" />
-              <rect y="10" width="32" height="4" fill="white" />
-              <rect y="20" width="20" height="4" fill="white" />
-            </svg>
-            <h1 className="mt-6 text-3xl md:text-4xl font-bold leading-tight">
+            <h1 className="title text-3xl md:text-5xl font-bold leading-tight">
               Добро пожаловать
               <br />в личный кабинет
               <br />
@@ -33,55 +29,31 @@ export default function AuthLayout({
             </h1>
           </div>
 
-          <div className="flex justify-between items-end mt-8">
-            <TruckIcon />
-            <div className="hidden md:block" />
-          </div>
+          <CarIcon className="size-12 md:size-20" />
 
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-white/40" />
+          <div className="absolute bottom-20 left-0 right-0 bg-white h-1" />
         </div>
 
-        <div className="relative flex-1 flex flex-col justify-center p-8 md:p-12 md:w-1/2">
-          <h2 className="text-2xl font-bold text-[--color-text-primary] mb-2">
-            {title}
-          </h2>
-          {children}
-          <PinIcon className="hidden md:block absolute bottom-8 right-8" />
+        <div
+          className={cn(
+            "right-info relative col-span-4 py-6 md:py-24 px-12 md:px-24",
+            "flex flex-col justify-between h-full",
+          )}>
+          <div className="top-info flex flex-col gap-4">
+            <h2 className="text-2xl md:text-4xl font-bold leading-tight">
+              {title}
+            </h2>
+
+            {children}
+          </div>
+
+          <div className="w-full flex justify-end">
+            <MapIcon className="size-12 md:size-20" />
+          </div>
+
+          <div className="absolute bottom-20 left-0 right-0 bg-brand h-1" />
         </div>
       </div>
     </div>
-  );
-}
-
-function TruckIcon() {
-  return (
-    <svg
-      width="40"
-      height="32"
-      viewBox="0 0 40 32"
-      fill="none"
-      stroke="white"
-      strokeWidth="2">
-      <rect x="2" y="10" width="20" height="14" rx="1" />
-      <path d="M22 14h8l6 6v4h-6" />
-      <circle cx="9" cy="26" r="3" fill="white" />
-      <circle cx="27" cy="26" r="3" fill="white" />
-    </svg>
-  );
-}
-
-function PinIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="var(--color-brand)"
-      strokeWidth="2">
-      <path d="M16 2C10 2 6 6.5 6 12c0 8 10 18 10 18s10-10 10-18c0-5.5-4-10-10-10z" />
-      <circle cx="16" cy="12" r="3" />
-    </svg>
   );
 }
