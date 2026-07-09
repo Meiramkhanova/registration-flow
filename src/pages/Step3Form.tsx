@@ -1,17 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import AuthLayout from "../app/AuthLayout";
 import { useRegistrationStore } from "../store/registrationStore";
-
-interface FormValues {
-  lastName: string;
-  firstName: string;
-  middleName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  idNumber: string;
-}
+import { Input } from "@/shared/ui/input";
+import { cn } from "@/shared/utils/cn";
+import { Button } from "@/shared/ui/button";
+import {
+  profileFormSchema,
+  type ProfileFormValues,
+} from "../schemas/profileFormSchema";
 
 export default function Step3Form() {
   const navigate = useNavigate();
@@ -21,10 +19,9 @@ export default function Step3Form() {
   const {
     register,
     handleSubmit,
-    watch,
-    setFocus,
-    formState: { errors, isValid },
-  } = useForm<FormValues>({
+    formState: { errors },
+  } = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
     mode: "onChange",
     defaultValues: {
       lastName: "",
@@ -37,10 +34,9 @@ export default function Step3Form() {
     },
   });
 
-  const password = watch("password");
   const idLabel = role === "customer" ? "БИН" : "ИИН";
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = (data: ProfileFormValues) => {
     setProfileData({
       lastName: data.lastName,
       firstName: data.firstName,
@@ -49,133 +45,108 @@ export default function Step3Form() {
       password: data.password,
       idNumber: data.idNumber,
     });
+
     navigate("/profile");
   };
 
-  const onInvalid = (formErrors: typeof errors) => {
-    const firstErrorField = Object.keys(formErrors)[0] as keyof FormValues;
-    if (firstErrorField) setFocus(firstErrorField);
-  };
-
   return (
-    <AuthLayout title="Регистрация">
-      <p className="text-gray-800 mb-6">
-        Заполните анкету для завершения регистрации
-      </p>
-
-      <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="space-y-3">
-        <div>
-          <input
-            type="text"
-            placeholder="Фамилия*"
-            className={`w-full px-3 py-2.5 border rounded-lg outline-none text-sm
-              ${errors.lastName ? "border-red-400" : "border-[--color-border-default] focus:border-brand"}`}
-            {...register("lastName", { required: true })}
-          />
-          {errors.lastName && (
-            <p className="text-xs text-red-500 mt-1">Обязательное поле</p>
+    <AuthLayout>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <Input
+          type="text"
+          placeholder="Фамилия*"
+          className={cn(
+            "input",
+            errors.lastName ? "border-red-400" : "focus:border-brand",
           )}
-        </div>
+          {...register("lastName")}
+        />
+        {errors.lastName && (
+          <p className="text-xs text-red-500 mt-1">{errors.lastName.message}</p>
+        )}
 
-        <div>
-          <input
-            type="text"
-            placeholder="Имя*"
-            className={`w-full px-3 py-2.5 border rounded-lg outline-none text-sm
-              ${errors.firstName ? "border-red-400" : "border-[--color-border-default] focus:border-brand"}`}
-            {...register("firstName", { required: true })}
-          />
-          {errors.firstName && (
-            <p className="text-xs text-red-500 mt-1">Обязательное поле</p>
+        <Input
+          type="text"
+          placeholder="Имя*"
+          className={cn(
+            "input",
+            errors.firstName ? "border-red-400" : "focus:border-brand",
           )}
-        </div>
+          {...register("firstName")}
+        />
+        {errors.firstName && (
+          <p className="text-xs text-red-500 mt-1">
+            {errors.firstName.message}
+          </p>
+        )}
 
-        <div>
-          <input
-            type="text"
-            placeholder="Отчество"
-            className="w-full px-3 py-2.5 border border-[--color-border-default] rounded-lg outline-none text-sm focus:border-brand"
-            {...register("middleName")}
-          />
-        </div>
+        <Input
+          type="text"
+          placeholder="Отчество (необязательно)"
+          className={cn("input", "focus:border-brand")}
+          {...register("middleName")}
+        />
 
-        <div>
-          <input
-            type="email"
-            placeholder="Email*"
-            className={`w-full px-3 py-2.5 border rounded-lg outline-none text-sm
-              ${errors.email ? "border-red-400" : "border-[--color-border-default] focus:border-brand"}`}
-            {...register("email", {
-              required: true,
-              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            })}
-          />
-          {errors.email && (
-            <p className="text-xs text-red-500 mt-1">Некорректный email</p>
+        <Input
+          type="email"
+          placeholder="Email*"
+          className={cn(
+            "input",
+            errors.email ? "border-red-400" : "focus:border-brand",
           )}
-        </div>
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
+        )}
 
-        <div>
-          <input
-            type="text"
-            placeholder={`${idLabel}*`}
-            maxLength={12}
-            className={`w-full px-3 py-2.5 border rounded-lg outline-none text-sm
-              ${errors.idNumber ? "border-red-400" : "border-[--color-border-default] focus:border-brand"}`}
-            {...register("idNumber", {
-              required: true,
-              pattern: /^\d{12}$/,
-            })}
-          />
-          {errors.idNumber && (
-            <p className="text-xs text-red-500 mt-1">
-              {idLabel} должен содержать ровно 12 цифр
-            </p>
+        <Input
+          type="text"
+          placeholder={`${idLabel}*`}
+          maxLength={12}
+          className={cn(
+            "input",
+            errors.idNumber ? "border-red-400" : "focus:border-brand",
           )}
-        </div>
+          {...register("idNumber")}
+        />
+        {errors.idNumber && (
+          <p className="text-xs text-red-500 mt-1">
+            {idLabel} {errors.idNumber.message}
+          </p>
+        )}
 
-        <div>
-          <input
-            type="password"
-            placeholder="Пароль*"
-            className={`w-full px-3 py-2.5 border rounded-lg outline-none text-sm
-              ${errors.password ? "border-red-400" : "border-[--color-border-default] focus:border-brand"}`}
-            {...register("password", {
-              required: true,
-              minLength: 8,
-              pattern: /^(?=.*[A-Za-z])(?=.*\d).+$/,
-            })}
-          />
-          {errors.password && (
-            <p className="text-xs text-red-500 mt-1">
-              Минимум 8 символов, буквы и цифры
-            </p>
+        <Input
+          type="password"
+          placeholder="Пароль*"
+          className={cn(
+            "input",
+            errors.password ? "border-red-400" : "focus:border-brand",
           )}
-        </div>
+          {...register("password")}
+        />
+        {errors.password && (
+          <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
+        )}
 
-        <div>
-          <input
-            type="password"
-            placeholder="Повторите пароль*"
-            className={`w-full px-3 py-2.5 border rounded-lg outline-none text-sm
-              ${errors.confirmPassword ? "border-red-400" : "border-[--color-border-default] focus:border-brand"}`}
-            {...register("confirmPassword", {
-              required: true,
-              validate: (v) => v === password || "Пароли не совпадают",
-            })}
-          />
-          {errors.confirmPassword && (
-            <p className="text-xs text-red-500 mt-1">
-              {errors.confirmPassword.message || "Обязательное поле"}
-            </p>
+        <Input
+          type="password"
+          placeholder="Повторите пароль*"
+          className={cn(
+            "input",
+            errors.confirmPassword ? "border-red-400" : "focus:border-brand",
           )}
-        </div>
+          {...register("confirmPassword")}
+        />
+        {errors.confirmPassword && (
+          <p className="text-xs text-red-500 mt-1">
+            {errors.confirmPassword.message}
+          </p>
+        )}
 
-        <button
-          type="submit"
-          className="w-full py-3 rounded-lg text-white font-medium transition-colors bg-brand hover:bg-[--color-brand-dark]">
+        <Button type="submit" className="w-full mt-4">
           ВОЙТИ
-        </button>
+        </Button>
       </form>
     </AuthLayout>
   );

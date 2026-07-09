@@ -55,34 +55,3 @@ export default function Step1Role() {
     </AuthLayout>
   );
 }
-
-function RoleIcon({ roleId }: { roleId: UserRole }) {
-  if (roleId === "customer") {
-    return (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="var(--color-brand)"
-        strokeWidth="2">
-        <rect x="3" y="7" width="18" height="13" rx="2" />
-        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-      </svg>
-    );
-  }
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="var(--color-brand)"
-      strokeWidth="2">
-      <rect x="2" y="9" width="12" height="8" rx="1" />
-      <path d="M14 12h5l3 3v2h-3" />
-      <circle cx="6" cy="19" r="1.5" fill="var(--color-brand)" />
-      <circle cx="17" cy="19" r="1.5" fill="var(--color-brand)" />
-    </svg>
-  );
-}
