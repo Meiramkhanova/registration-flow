@@ -1,75 +1,32 @@
-# React + TypeScript + Vite
+# Многошаговая регистрация
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Тестовое задание — регистрация в несколько шагов (телефон → роль → код из смс → анкета) и экран профиля. Сверстано по макету из Figma.
 
-Currently, two official plugins are available:
+## Как запустить
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm i
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Что использовал
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- React + TypeScript
+- React Router — переходы между шагами
+- React Hook Form — формы и валидация
+- Zustand — чтобы данные не терялись между шагами
+- react-international-phone — ввод и маска телефона
+- i18next — русский/английский
+- Tailwind CSS
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Шаги
 
-```
+**Телефон** — ввод номера с маской, чекбокс согласия с политикой, кнопка активна только когда номер валидный и галочка стоит.
+
+**Роль** — заказчик или перевозчик, выбирается один вариант.
+
+**Код подтверждения** — 6 инпутов, таймер на 60 секунд перед повторной отправкой. Проверка без бэкенда, код тестовый — `123456`.
+
+**Анкета** — фамилия, имя, отчество (необязательно), email, пароль, ИИН/БИН в зависимости от роли. Есть проверка email, пароля (8+ символов, буквы и цифры) и что ИИН/БИН это 12 цифр.
+
+**Профиль** — показывает всё, что ввели. Можно отредактировать имя/фамилию/email, можно выйти — тогда всё сбрасывается и кидает обратно на первый шаг.
