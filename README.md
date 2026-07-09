@@ -9,7 +9,7 @@ npm i
 npm run dev
 ```
 
-## Что использовал
+## Что использовано
 
 - React + TypeScript
 - React Router — переходы между шагами
