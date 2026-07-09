@@ -10,6 +10,7 @@ import { Button } from "@/shared/ui/button";
 import "react-international-phone/style.css";
 import { PhoneInput } from "react-international-phone";
 import { Field, FieldGroup, FieldLabel } from "@/shared/ui/field";
+import { useTranslation } from "react-i18next";
 
 interface FormValues {
   phone: string;
@@ -21,12 +22,9 @@ export default function Step0Phone() {
   const navigate = useNavigate();
   const setPhone = useRegistrationStore((s) => s.setPhone);
 
-  const {
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { isValid },
-  } = useForm<FormValues>({
+  const { t } = useTranslation();
+
+  const { handleSubmit, watch, setValue } = useForm<FormValues>({
     mode: "onChange",
     defaultValues: { phone: "", agree: false },
   });
@@ -47,10 +45,9 @@ export default function Step0Phone() {
   };
 
   return (
-    <AuthLayout title="Регистрация">
+    <AuthLayout title={t("step0.title")}>
       <p className="text-gray-800 md:max-w-[80%] pb-6">
-        Для входа в личный кабинет введите свой номер телефона, на него будет
-        отправлено SMS с проверочным кодом
+        {t("step0.description")}
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
@@ -65,7 +62,7 @@ export default function Step0Phone() {
           />
           {phoneValue && !isPhoneValid && (
             <p className="text-sm text-red-500 mt-1.5 font-medium">
-              Введите корректный номер телефона
+              {t("step0.phoneError")}
             </p>
           )}
         </div>
@@ -82,13 +79,18 @@ export default function Step0Phone() {
             />
 
             <FieldLabel htmlFor="terms-checkbox-basic">
-              Согласен с политикой конфиденциальности{" "}
+              {t("step0.agree")}{" "}
+              <a href="#" className="text-brand underline">
+                {t("step0.privacyPolicy")}
+              </a>
             </FieldLabel>
           </Field>
         </FieldGroup>
 
-        <Button type="submit" disabled={!isValid || !isPhoneValid || loading}>
-          {loading ? "Отправка..." : "ВОЙТИ"}
+        <Button
+          type="submit"
+          disabled={!agreeValue || !isPhoneValid || loading}>
+          {loading ? t("step0.submitting") : t("step0.submit")}
         </Button>
       </form>
     </AuthLayout>

@@ -6,8 +6,9 @@ import {
   type KeyboardEvent,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import AuthLayout from "../app/AuthLayout";
-import { useRegistrationStore } from "../store/registrationStore";
+import { useTranslation } from "react-i18next";
+import { useRegistrationStore } from "@/store/registrationStore";
+import AuthLayout from "@/app/AuthLayout";
 
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 60;
@@ -15,6 +16,7 @@ const MOCK_CODE = "123456";
 
 export default function Step2Otp() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const phone = useRegistrationStore((s) => s.phone);
   const setOtpVerified = useRegistrationStore((s) => s.setOtpVerified);
 
@@ -66,7 +68,7 @@ export default function Step2Otp() {
         setOtpVerified(true);
         navigate("/profile-form");
       } else {
-        setError("Неверный код. Попробуйте ещё раз");
+        setError(t("step2.invalidCode"));
         setDigits(Array(CODE_LENGTH).fill(""));
         inputsRef.current[0]?.focus();
       }
@@ -80,17 +82,22 @@ export default function Step2Otp() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete]);
 
+  const minutes = String(Math.floor(timer / 60)).padStart(2, "0");
+  const seconds = String(timer % 60).padStart(2, "0");
+
   return (
-    <AuthLayout title="Введите код из SMS">
+    <AuthLayout title={t("step2.title")}>
       <p className="text-gray-800 mb-6">
-        Проверочный код был отправлен на номер {phone || "+7 (___) ___-__-__"}
+        {t("step2.description", { phone: phone || "+7 (___) ___-__-__" })}
       </p>
 
       <div className="flex gap-2 mb-4">
         {digits.map((d, i) => (
           <input
             key={i}
-            // ref={(el) => (inputsRef.current[i] = el)}
+            ref={(el) => {
+              inputsRef.current[i] = el;
+            }}
             type="text"
             inputMode="numeric"
             maxLength={1}
@@ -103,7 +110,7 @@ export default function Step2Otp() {
         ))}
       </div>
 
-      {error && <p className=" text-red-500 mb-4">{error}</p>}
+      {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <button
         type="button"
@@ -111,11 +118,11 @@ export default function Step2Otp() {
         disabled={timer > 0}
         className="cursor-pointer text-brand disabled:text-[--color-text-muted] mb-6">
         {timer > 0
-          ? `Отправить повторно через ${String(Math.floor(timer / 60)).padStart(2, "0")}:${String(timer % 60).padStart(2, "0")}`
-          : "Отправить код повторно"}
+          ? t("step2.resendIn", { time: `${minutes}:${seconds}` })
+          : t("step2.resendNow")}
       </button>
 
-      {loading && <p className="text-gray-800">Проверка кода...</p>}
+      {loading && <p className="text-gray-800">{t("step2.verifying")}</p>}
     </AuthLayout>
   );
 }

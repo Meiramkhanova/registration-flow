@@ -1,8 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import AuthLayout from "../app/AuthLayout";
-import { useRegistrationStore } from "../store/registrationStore";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/shared/ui/input";
 import { cn } from "@/shared/utils/cn";
 import { Button } from "@/shared/ui/button";
@@ -10,9 +9,12 @@ import {
   profileFormSchema,
   type ProfileFormValues,
 } from "../schemas/profileFormSchema";
+import { useRegistrationStore } from "@/store/registrationStore";
+import AuthLayout from "@/app/AuthLayout";
 
 export default function Step3Form() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const role = useRegistrationStore((s) => s.role);
   const setProfileData = useRegistrationStore((s) => s.setProfileData);
 
@@ -34,7 +36,7 @@ export default function Step3Form() {
     },
   });
 
-  const idLabel = role === "customer" ? "БИН" : "ИИН";
+  const idLabel = role === "customer" ? t("step3.bin") : t("step3.iin");
 
   const onSubmit = (data: ProfileFormValues) => {
     setProfileData({
@@ -54,7 +56,7 @@ export default function Step3Form() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <Input
           type="text"
-          placeholder="Фамилия*"
+          placeholder={`${t("step3.lastName")}*`}
           className={cn(
             "input",
             errors.lastName ? "border-red-400" : "focus:border-brand",
@@ -62,12 +64,14 @@ export default function Step3Form() {
           {...register("lastName")}
         />
         {errors.lastName && (
-          <p className="text-xs text-red-500 mt-1">{errors.lastName.message}</p>
+          <p className="text-xs text-red-500 mt-1">
+            {t(errors.lastName.message as string)}
+          </p>
         )}
 
         <Input
           type="text"
-          placeholder="Имя*"
+          placeholder={`${t("step3.firstName")}*`}
           className={cn(
             "input",
             errors.firstName ? "border-red-400" : "focus:border-brand",
@@ -76,20 +80,20 @@ export default function Step3Form() {
         />
         {errors.firstName && (
           <p className="text-xs text-red-500 mt-1">
-            {errors.firstName.message}
+            {t(errors.firstName.message as string)}
           </p>
         )}
 
         <Input
           type="text"
-          placeholder="Отчество (необязательно)"
+          placeholder={t("step3.middleName")}
           className={cn("input", "focus:border-brand")}
           {...register("middleName")}
         />
 
         <Input
           type="email"
-          placeholder="Email*"
+          placeholder={`${t("step3.email")}*`}
           className={cn(
             "input",
             errors.email ? "border-red-400" : "focus:border-brand",
@@ -97,7 +101,9 @@ export default function Step3Form() {
           {...register("email")}
         />
         {errors.email && (
-          <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
+          <p className="text-xs text-red-500 mt-1">
+            {t(errors.email.message as string)}
+          </p>
         )}
 
         <Input
@@ -112,13 +118,13 @@ export default function Step3Form() {
         />
         {errors.idNumber && (
           <p className="text-xs text-red-500 mt-1">
-            {idLabel} {errors.idNumber.message}
+            {idLabel} {t(errors.idNumber.message as string)}
           </p>
         )}
 
         <Input
           type="password"
-          placeholder="Пароль*"
+          placeholder={`${t("step3.password")}*`}
           className={cn(
             "input",
             errors.password ? "border-red-400" : "focus:border-brand",
@@ -126,12 +132,14 @@ export default function Step3Form() {
           {...register("password")}
         />
         {errors.password && (
-          <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>
+          <p className="text-xs text-red-500 mt-1">
+            {t(errors.password.message as string)}
+          </p>
         )}
 
         <Input
           type="password"
-          placeholder="Повторите пароль*"
+          placeholder={`${t("step3.confirmPassword")}*`}
           className={cn(
             "input",
             errors.confirmPassword ? "border-red-400" : "focus:border-brand",
@@ -140,12 +148,12 @@ export default function Step3Form() {
         />
         {errors.confirmPassword && (
           <p className="text-xs text-red-500 mt-1">
-            {errors.confirmPassword.message}
+            {t(errors.confirmPassword.message as string)}
           </p>
         )}
 
-        <Button type="submit" className="w-full mt-4">
-          ВОЙТИ
+        <Button type="submit" className="w-full mt-4 uppercase">
+          {t("step3.submit")}
         </Button>
       </form>
     </AuthLayout>

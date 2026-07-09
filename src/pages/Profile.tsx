@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,9 +27,10 @@ import ActiveIcon from "@/shared/icons/ActiveIcon";
 import { cn } from "@/shared/utils/cn";
 import CarIcon from "@/shared/icons/CarIcon";
 import { Button } from "@/shared/ui/button";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 interface EditableRow {
-  label: string;
+  labelKey: string;
   key: "lastName" | "firstName" | "middleName" | "phone" | "email";
   value: string;
   editable: boolean;
@@ -38,29 +40,40 @@ type SaveStatus = "idle" | "saving" | "saved";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const store = useRegistrationStore();
 
   const [fields, setFields] = useState<EditableRow[]>([
     {
-      label: "Фамилия",
+      labelKey: "step3.lastName",
       key: "lastName",
       value: store.lastName,
       editable: true,
     },
-    { label: "Имя", key: "firstName", value: store.firstName, editable: true },
     {
-      label: "Отчество",
+      labelKey: "step3.firstName",
+      key: "firstName",
+      value: store.firstName,
+      editable: true,
+    },
+    {
+      labelKey: "step3.middleNameLabel",
       key: "middleName",
       value: store.middleName || "",
       editable: false,
     },
     {
-      label: "Номер телефона",
+      labelKey: "profile.phone",
       key: "phone",
       value: store.phone,
       editable: false,
     },
-    { label: "Email", key: "email", value: store.email, editable: true },
+    {
+      labelKey: "step3.email",
+      key: "email",
+      value: store.email,
+      editable: true,
+    },
   ]);
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
@@ -78,11 +91,9 @@ export default function Profile() {
       updates[f.key] = f.value;
     });
 
-    // имитация запроса на сервер
     setTimeout(() => {
       store.setProfileData(updates);
       setSaveStatus("saved");
-
       setTimeout(() => setSaveStatus("idle"), 2000);
     }, 600);
   };
@@ -103,81 +114,85 @@ export default function Profile() {
           <span className="font-bold text-lg tracking-wider">TRANSLINE</span>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-1.5 outline-none">
-            <Avatar className="size-10">
-              <AvatarFallback className="bg-gray-50 text-gray-800 text-xs font-medium border-none">
-                {initials || "👤"}
-              </AvatarFallback>
-            </Avatar>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
-          </DropdownMenuTrigger>
+        <div className="flex items-center gap-8">
+          <LanguageSwitcher />
 
-          <DropdownMenuContent align="end" className="w-48">
-            <div className="px-2 py-1.5 text-xs">
-              <div className="font-medium text-gray-800">
-                {store.firstName} {store.lastName}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1.5 outline-none">
+              <Avatar className="size-10">
+                <AvatarFallback className="bg-gray-50 text-gray-800 text-xs font-medium border-none">
+                  {initials || "👤"}
+                </AvatarFallback>
+              </Avatar>
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-48">
+              <div className="px-2 py-1.5 text-xs">
+                <div className="font-medium text-gray-800">
+                  {store.firstName} {store.lastName}
+                </div>
+                <div className="text-xs text-gray-500 truncate">
+                  {store.email}
+                </div>
               </div>
-              <div className="text-xs text-gray-500 truncate">
-                {store.email}
-              </div>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer">
-              <LogOut className="w-4 h-4 mr-2" />
-              Выйти
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer">
+                <LogOut className="w-4 h-4 mr-2" />
+                {t("profile.logout")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </header>
 
       <div className="flex flex-1">
         <aside className="hidden md:flex w-60 border-r border-[--color-border-default] flex-col py-4 text-sm bg-gray-50">
-          <NavGroup title="заявки">
+          <NavGroup title={t("profile.nav.requests")}>
             <NavItem
               icon={<ActiveIcon className="size-5 stroke-gray-500" />}
-              label="Активные"
+              label={t("profile.nav.active")}
               isActive
             />
             <NavItem
               icon={<FolderOpen className="size-5 stroke-gray-500" />}
-              label="Архивные"
+              label={t("profile.nav.archive")}
             />
           </NavGroup>
 
-          <NavGroup title="контрагенты">
+          <NavGroup title={t("profile.nav.contractors")}>
             <NavItem
               icon={<Users className="size-5 stroke-gray-500" />}
-              label="Заказчики"
+              label={t("profile.nav.customers")}
             />
             <NavItem
               icon={<UserRoundArrowLeft className="size-5 stroke-gray-500" />}
-              label="Перевозчики"
+              label={t("profile.nav.carriers")}
             />
           </NavGroup>
-          <NavGroup title="автопарк">
+          <NavGroup title={t("profile.nav.fleet")}>
             <NavItem
               icon={
                 <CarIcon className="size-5 stroke-gray-500 fill-transparent" />
               }
-              label="Транспорт"
+              label={t("profile.nav.transport")}
             />
           </NavGroup>
           <div className="mt-auto">
-            <NavGroup title="управление">
+            <NavGroup title={t("profile.nav.management")}>
               <NavItem
                 icon={
                   <BookOpenCheck className="size-5 stroke-gray-500 fill-transparent" />
                 }
-                label="Справочники"
+                label={t("profile.nav.references")}
               />
               <NavItem
                 icon={
                   <SquareUserRound className="size-5 stroke-gray-500 fill-transparent" />
                 }
-                label="Менеджеры"
+                label={t("profile.nav.managers")}
               />
             </NavGroup>
           </div>
@@ -195,13 +210,15 @@ export default function Profile() {
                   {saveStatus === "saving" && (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   )}
-                  {saveStatus === "saving" ? "Сохранение..." : "Сохранить"}
+                  {saveStatus === "saving"
+                    ? t("profile.saving")
+                    : t("profile.save")}
                 </Button>
 
                 {saveStatus === "saved" && (
                   <span className="flex items-center gap-1 text-sm text-green-600">
                     <Check className="w-4 h-4" />
-                    Сохранено
+                    {t("profile.saved")}
                   </span>
                 )}
               </div>
@@ -212,7 +229,9 @@ export default function Profile() {
                 <div
                   key={f.key}
                   className="flex items-center justify-between py-2 border-b border-[--color-border-default]">
-                  <span className="text-gray-500 w-36 shrink-0">{f.label}</span>
+                  <span className="text-gray-500 w-36 shrink-0">
+                    {t(f.labelKey)}
+                  </span>
 
                   {editingKey === f.key ? (
                     <input

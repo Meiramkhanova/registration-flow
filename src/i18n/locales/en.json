@@ -1,0 +1,76 @@
+{
+  "step0": {
+    "title": "Registration",
+    "description": "Enter your phone number to sign in — we'll send an SMS verification code",
+    "agree": "I agree to the",
+    "privacyPolicy": "privacy policy",
+    "submit": "Log in",
+    "submitting": "Sending...",
+    "phoneError": "Enter a valid phone number"
+  },
+  "step1": {
+    "description": "Choose how you want to use the app",
+    "customerTitle": "as a customer",
+    "customerDesc": "Track order fulfillment in real time",
+    "carrierTitle": "as a carrier",
+    "carrierDesc": "Get up-to-date info about your shipments",
+    "continue": "Continue"
+  },
+  "step2": {
+    "title": "Enter SMS code",
+    "description": "A verification code was sent to {{phone}}",
+    "resendIn": "Resend in {{time}}",
+    "resendNow": "Resend code",
+    "verifying": "Verifying...",
+    "invalidCode": "Invalid code. Please try again"
+  },
+  "step3": {
+    "lastName": "Last name",
+    "firstName": "First name",
+    "middleName": "Middle name (optional)",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "iin": "IIN",
+    "bin": "BIN",
+    "submit": "Log in",
+    "errors": {
+      "required": "Required field",
+      "invalidEmail": "Invalid email",
+      "weakPassword": "At least 8 characters, letters and digits",
+      "passwordMismatch": "Passwords don't match",
+      "invalidIdNumber": "Must be exactly 12 digits"
+    },
+    "middleNameLabel": "Middle name"
+
+  },
+  "profile": {
+    "title": "Profile",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "logout": "Log out",
+    "phone": "Phone number",
+    "nav": {
+  "requests": "requests",
+  "active": "Active",
+  "archive": "Archive",
+  "contractors": "contractors",
+  "customers": "Customers",
+  "carriers": "Carriers",
+  "fleet": "fleet",
+  "transport": "Transport",
+  "management": "management",
+  "references": "References",
+  "managers": "Managers",
+  "middleNameLabel": "Middle name"
+
+}
+  },
+  "layout": {
+  "welcomeLine1": "Welcome",
+  "welcomeLine2": "to your business",
+  "welcomeLine3": "dashboard!"
+},
+"middleNameLabel": "Middle name"
+}
