@@ -20,13 +20,17 @@ export default function AuthLayout({
   const { t } = useTranslation();
 
   return (
-    <div className={cn("h-screen flex flex-col", className)}>
+    <div className={cn("min-h-screen sm:h-screen flex flex-col", className)}>
       <div className="grid grid-cols-1 sm:grid-cols-7 h-full">
         <div
           className={cn(
-            "left-info col-span-3 relative bg-brand text-white",
-            "py-12 md:py-24 px-8 md:px-16 h-full z-40",
+            "left-info sm:col-span-3 relative bg-brand text-white",
+            "py-12 md:py-24 px-8 md:px-16 md:h-full z-40",
           )}>
+          <div className="lang-switcher absolute sm:hidden top-10 right-10 px-4 py-2 items-center justify-between">
+            <LanguageSwitcher color="text-white" />
+          </div>
+
           <div className="icon-title flex flex-col gap-4">
             <CoverIcon className="size-12" />
 
@@ -39,17 +43,17 @@ export default function AuthLayout({
             </h1>
           </div>
 
-          <CarIcon className="absolute bottom-24 size-12 left-8 md:left-16 md:size-20 -z-20 stroke-white" />
+          <CarIcon className="hidden md:block absolute bottom-24 size-12 left-8 md:left-16 md:size-20 -z-20 stroke-white" />
 
-          <div className="absolute bottom-20 left-0 right-0 bg-white h-1 -z-20" />
+          <div className="absolute bottom-4 md:bottom-20 left-0 right-0 bg-white h-1 -z-20" />
         </div>
 
         <div
           className={cn(
-            "right-info relative col-span-4 py-6 md:py-24 px-12 md:px-24",
+            "right-info relative sm:col-span-4 py-6 md:py-24 px-12 md:px-24",
             "h-full gap-4 z-40",
           )}>
-          <div className="lang-switcher absolute top-10 right-10 px-4 py-2 flex items-center justify-between">
+          <div className="lang-switcher absolute hidden sm:flex top-10 right-10 px-4 py-2 items-center justify-between">
             <LanguageSwitcher />
           </div>
 
@@ -63,9 +67,9 @@ export default function AuthLayout({
             {children}
           </div>
 
-          <MapIcon className="absolute bottom-24 right-12 md:right-24 size-12 md:size-20 -z-20" />
+          <MapIcon className="hidden sm:block absolute bottom-24 right-12 md:right-24 size-12 md:size-20 -z-20" />
 
-          <div className="absolute bottom-20 left-0 right-0 bg-brand h-1 -z-20" />
+          <div className="hidden sm:block absolute bottom-20 left-0 right-0 bg-brand h-1 -z-20" />
         </div>
       </div>
     </div>
